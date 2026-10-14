@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Certificate – Reference Line Training &amp; Evaluation</title>
+  <link rel="stylesheet" href="refline.css">
+</head>
+<body>
+  <main class="container" style="text-align:center; padding-top:2rem">
+    <img src="img/logo-refline.png" width="332" height="65" alt="UCSF Reference Line Training &amp; Evaluation">
+    <h1>Congratulations!</h1>
+    <p id="message">You have completed the Reference Line evaluation.</p>
+    <p id="date"></p>
+    <p class="no-print">
+      <button type="button" class="btn" onclick="window.print()">Print</button>
+      <a class="btn btn-secondary" href="reflineEvaluation.html">Back to Evaluation</a>
+    </p>
+  </main>
+  <script>
+    // ?bone=radius-scanco | radius-proximal | tibia
+    var labels = {
+      'radius-scanco': 'radius sets (Scanco landmark)',
+      'radius-proximal': 'radius sets (proximal margin landmark)',
+      'tibia': 'tibia sets'
+    };
+    var bone = new URLSearchParams(location.search).get('bone');
+    if (labels[bone]) {
+      document.getElementById('message').textContent =
+        'You have passed three ' + labels[bone] + ' in the Reference Line Evaluation module.';
+    }
+    document.getElementById('date').textContent = new Date().toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' });
+  </script>
+</body>
+</html>

@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Reference Line – Training and Evaluation | UCSF Radiology</title>
+  <meta name="description" content="Web-based training and evaluation of HR-pQCT operators positioning the reference line on scout view images.">
+  <link rel="icon" href="img/icon-training.png">
+  <link rel="stylesheet" href="refline.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to main content</a>
+
+  <nav id="ucsf-banner-nav" aria-label="University of California San Francisco">
+    <div class="inner">
+      <a href="https://www.ucsf.edu/">University of California San Francisco</a>
+      <ul>
+        <li><a href="https://radiology.ucsf.edu/">Radiology &amp; Biomedical Imaging</a></li>
+        <li><a href="https://www.ucsf.edu/search">Search UCSF</a></li>
+        <li><a href="https://www.ucsfhealth.org/">UCSF Health</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <header class="site-header">
+    <a class="lockup" href="landingpage.html"><img src="img/logo-refline.png" width="332" height="65" alt="UCSF Reference Line Training &amp; Evaluation – home"></a>
+    <nav class="site-nav" aria-label="Main">
+      <ul>
+        <li><a href="#modules">Modules</a></li>
+        <li><a href="#about">About</a></li>
+        <li><a href="#documentation">Documentation</a></li>
+        <li><a href="#contact">Contact Us</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main id="main">
+    <div class="hero">
+      <img src="img/hero.jpg" width="2000" height="759" alt="An operator positions a participant's forearm in an XtremeCT HR-pQCT scanner while a colleague reviews scan images at the workstation.">
+      <div class="hero-text">
+        <h1>Reference Line Training &amp; Evaluation</h1>
+        <p>A tool for training and evaluating operator scan positioning for high-resolution peripheral quantitative computed tomography (HR-pQCT).</p>
+      </div>
+    </div>
+
+    <div class="container">
+      <section id="modules" aria-labelledby="modules-h">
+        <h2 id="modules-h">Modules</h2>
+        <ul class="modules">
+          <li><a class="module-card" href="reflineTraining.html">
+            <img src="img/icon-training.png" width="120" height="120" alt="">
+            <span class="title">Training</span>
+            <span class="desc">Practice positioning the reference line with immediate feedback.</span>
+          </a></li>
+          <li><a class="module-card" href="reflineEvaluation.html">
+            <img src="img/icon-evaluation.png" width="120" height="120" alt="">
+            <span class="title">Evaluation</span>
+            <span class="desc">Pass three radius and three tibia sets to be certified.</span>
+          </a></li>
+          <li><a class="module-card" href="reflineRepro.html">
+            <img src="img/icon-repro.png" width="120" height="120" alt="">
+            <span class="title">Reproducibility</span>
+            <span class="desc">Measure your short-term intra-operator reproducibility.</span>
+          </a></li>
+        </ul>
+        <p class="hint">As on the scanner workstation, the modules require a desktop or laptop computer with a mouse or trackpad and a browser window at least 900 pixels wide. They cannot be used on phones or tablets.</p>
+      </section>
+
+      <section id="about" aria-labelledby="about-h">
+        <h2 id="about-h">About</h2>
+
+        <details>
+          <summary>What is <cite>Reference Line – Training and Evaluation</cite>?</summary>
+          <p><cite>Reference Line – Training and Evaluation</cite> is a web application designed to train and evaluate HR-pQCT operators in positioning the reference line on scout view images.</p>
+          <p>It contains three modules: Training, Evaluation, and Reproducibility. Each module simulates the acquisition software of the XtremeCT system (Scanco Medical AG, Brüttisellen, Switzerland), reproducing how scout view images are displayed and how the reference line is positioned.</p>
+          <figure>
+            <img src="img/fig-interface.jpg" width="1600" height="721" loading="lazy" alt="Side-by-side screenshots: on the left, the Scanco acquisition software with its scout view window; on the right, the Training module, which reproduces the same scout view window, preview panel, and positioning controls.">
+            <figcaption>Scanco acquisition software (left) and the Training module of <cite>Reference Line – Training and Evaluation</cite> (right).</figcaption>
+          </figure>
+        </details>
+
+        <details>
+          <summary>What is the purpose of a reference line positioning tool?</summary>
+          <p>During a scan, HR-pQCT operators acquire an anterior–posterior 2D projection (scout view image) of the radius or tibia, on which they visually identify an anatomical landmark that determines the region to be scanned. The landmark corresponds to a peak in the mid-joint for the radius and to a peak in the distal articular plateau for the tibia, as indicated by the arrows in the figure below. Operators manually position a reference line at the landmark (green line), which determines the region to be scanned (green rectangle). In the standard protocol this region lies a fixed distance proximal to the reference line.</p>
+          <figure>
+            <img src="img/fig-thisregion.jpg" width="1600" height="800" loading="lazy" alt="Two scout view images. (a) Radius: an arrow points to the landmark in the radiocarpal joint; the reference line passes through it, and the 9.02 mm scan region begins 9.5 mm proximal to the line. (b) Tibia: an arrow points to the tibial plafond; the 9.02 mm scan region begins 22.5 mm proximal to the reference line.">
+            <figcaption>Scout view images of the radius (a) and tibia (b). The reference line (green) at the anatomical landmark is positioned by the HR-pQCT operator and determines the region to be scanned (green rectangle).</figcaption>
+          </figure>
+          <p>Visual identification of the landmark and positioning of the reference line can vary for a given operator as well as between operators. This shifts the region of interest and therefore affects measurements of morphological and densitometric parameters. To reduce these inconsistencies, this tool trains operators to identify anatomical landmarks and position the reference line, minimizing intra- and inter-operator variability.</p>
+        </details>
+
+        <details>
+          <summary>How do I cite <cite>Reference Line – Training and Evaluation</cite>?</summary>
+          <p>If you use <cite>Reference Line – Training and Evaluation</cite> to train operators taking part in your study, please cite:</p>
+          <p class="note">Bonaretti S, Vilayphiou N, Chan CM, Yu A, Nishiyama K, Liu D, Boutroy S, Ghasem-Zadeh A, Boyd SK, Chapurlat R, McKay H, Shane E, Bouxsein ML, Black DM, Majumdar S, Orwoll ES, Lang TF, Khosla S, Burghardt AJ. Operator variability in scan positioning is a major component of HR-pQCT precision error and is reduced by standardized training. <cite>Osteoporosis International</cite>. 2017;28(1):245–257. <a href="https://doi.org/10.1007/s00198-016-3705-5">doi:10.1007/s00198-016-3705-5</a></p>
+        </details>
+
+        <h3>Credits</h3>
+        <p>Software and website developed by Serena Bonaretti, Caroline Mai Chan, and Andrew J. Burghardt.</p>
+        <p>This study was funded by NIH/NIAMS R01 AR060700 and by The Osteoporotic Fractures in Men (MrOS) Study, which is funded by the National Institute on Aging (NIA), the National Institute of Arthritis and Musculoskeletal and Skin Diseases (NIAMS), the National Center for Advancing Translational Sciences (NCATS), and NIH Roadmap for Medical Research, under the following grant numbers: U01 AG027810, U01 AG042124, U01 AG042139, U01 AG042140, U01 AG042143, U01 AG042145, U01 AG042168, U01 AR066160, and UL1 TR000128.</p>
+      </section>
+
+      <section id="documentation" aria-labelledby="docs-h">
+        <h2 id="docs-h">Documentation</h2>
+
+        <h3 id="doc-radius">Radius</h3>
+        <details>
+          <summary>What is the anatomy of the radius joint?</summary>
+          <p>To identify the anatomical landmark for positioning the reference line in distal radius exams, we focus on the articular surface of the radius in the radiocarpal joint of the wrist.</p>
+          <figure>
+            <img src="img/fig-radiocarpal.jpg" width="1600" height="772" loading="lazy" alt="Labeled drawing of the wrist bones next to a matching scout view image, identifying the radius, the ulna, and the radiocarpal articular surface.">
+            <figcaption>Drawing (left) and scout view image (right) of the wrist showing the radius, ulna, and radiocarpal articular surface.</figcaption>
+          </figure>
+        </details>
+        <details>
+          <summary>Where is the radius landmark located in scout view images?</summary>
+          <p>The radius landmark is a peak of the radiocarpal articular surface of the radius. It separates the radiopaque subchondral bone (bright signal) from the radiolucent joint space (dark signal).</p>
+          <p>In simple cases (a), where a peak is clearly visible (dot), we position the reference line (green line) so that it intersects the peak of the crest at the edge of the joint surface. In more complicated cases (b), where no peak is visible, we use the midpoint of the curve that traces the articular surface of the radius. In both cases the articular surface is the edge where there is a clear transition between the radiolucent joint space and the radiopaque subchondral bone; the traced curve overlays that edge, and the reference line is positioned so that it intersects the curve.</p>
+          <figure>
+            <img src="img/fig-radiuspositionhere.jpg" width="1600" height="987" loading="lazy" alt="Two rows of three radius images, titled Scout View Image, Landmark Identification, and Reference Line Position. Row (a): a curve traced along the joint surface with a dot on a visible peak, and the green reference line through that dot. Row (b): a smooth curve with no peak, a dot at its midpoint, and the green reference line through that midpoint.">
+            <figcaption>Identifying the radius landmark when the crest is clearly visible (a) and when it is not (b). Each row shows the scout view image, landmark identification (curve and dot), and the resulting reference line position (green line).</figcaption>
+          </figure>
+          <p>When a crest is present in the scout view image, the Swiss hiker analogy describes where the reference line should intersect the curve. Imagine a hiker walking along the surface traced by the curve. The crest is a small hill the hiker must climb while crossing the joint surface, and at its peak the hiker plants a flag. The point where the flag is planted is where the correctly positioned reference line crosses the curve.</p>
+          <figure>
+            <img src="img/fig-hiker.jpg" width="1600" height="400" loading="lazy" alt="Four panels of the same radius joint. (a) the scout view; (b) the articular surface traced as a green path; (c) a hiker figure walking along the path; (d) the hiker at the top of the crest raising a flag, with a horizontal green line extending from that point.">
+            <figcaption>Swiss hiker analogy. The articular surface of the radius (a) can be considered a hiking path (b). The hiker walks along the path (c) until reaching the peak, where the flag is planted. The peak is where the reference line intersects the edge that represents the articular surface of the radius (d).</figcaption>
+          </figure>
+        </details>
+
+        <h3 id="doc-tibia">Tibia</h3>
+        <details>
+          <summary>What is the anatomy of the tibia joint?</summary>
+          <p>To identify the anatomical landmark for positioning the reference line in distal tibia exams, we focus on the articular surface of the tibia at the tibial plafond.</p>
+          <figure>
+            <img src="img/fig-tibialplatfond.jpg" width="1600" height="772" loading="lazy" alt="Labeled drawing of the ankle bones next to a matching scout view image, identifying the tibia, the fibula, and the tibial plafond.">
+            <figcaption>Drawing (left) and scout view image (right) of the ankle showing the tibia, fibula, and tibial plafond.</figcaption>
+          </figure>
+        </details>
+        <details>
+          <summary>Where is the tibia landmark?</summary>
+          <p>The tibia landmark is the plateau or the crest of the tibial plafond, which separates the radiopaque subchondral bone (bright signal) from the radiolucent joint space (dark signal).</p>
+          <p>When the tibial plafond is flat (a), we position the reference line (green line) so that it overlays the thin, high-intensity plateau of the plafond. When there is a crest in the tibial plafond (b), we identify the landmark as the peak of the crest (dot) and position the reference line so that it intersects the thin, high-intensity margin at that peak. Note that for the tibia the reference line cuts through the center of the high-intensity plateau rather than the surface crest, as it does for the radius.</p>
+          <figure>
+            <img src="img/fig-positionhere.jpg" width="1600" height="987" loading="lazy" alt="Two rows of three tibia images, titled Scout View Image, Landmark Identification, and Reference Line Position. Row (a): a flat plafond traced by a short line, with the green reference line along it. Row (b): a plafond with a crest, a dot on the peak, and the green reference line through the dot.">
+            <figcaption>Identifying the tibia landmark with a flat plateau (a) and with a crest in the plateau (b). Each row shows the scout view image, landmark identification (line and dot), and the resulting reference line position (green line).</figcaption>
+          </figure>
+        </details>
+
+        <h3 id="doc-training">Training module</h3>
+        <details>
+          <summary>What is the Training module?</summary>
+          <p>The Training module lets HR-pQCT operators practice positioning the reference line on scout view images, with feedback after every image.</p>
+        </details>
+        <details>
+          <summary>How do I use the Training module?</summary>
+          <p>You train on image sets of 8 images each. Choose a category: limb laterality (left or right) combined with landmark visibility (visible or not visible), a mixed set (combined laterality and landmark visibility), or a random set. Each category has 3 sets, which are presented in turn. Landmark visibility refers to the Scanco landmark, so when the radius proximal margin landmark is selected, the categories are by laterality only (6 sets each). Before moving to the Evaluation module, complete <strong>For certification</strong>, which contains all 15 training sets (120 images, about 1 hour).</p>
+          <ol class="steps">
+            <li>Open the <a href="reflineTraining.html">Training module</a>.</li>
+            <li>Choose the bone: <strong>Radius</strong> or <strong>Tibia</strong>. For the radius, also choose the landmark definition.</li>
+            <li>Choose an image set, then select <strong>Start</strong>. The first image appears.</li>
+            <li>Select <strong>Set reference line</strong>. A green reference line appears on the image.</li>
+            <li>Move the line with the mouse and click to place it. (Keyboard alternative: Up and Down arrow keys, then Enter. The keyboard is allowed for practice, but lines placed with the keyboard do not count in the Evaluation and Reproducibility modules.)</li>
+            <li>To reposition, select <strong>Set reference line</strong> again. When satisfied, select <strong>Confirm</strong>.</li>
+            <li>Feedback appears: <strong>Exact</strong> (correct position), <strong>Good</strong> (within 2 pixels), or <strong>Out of range</strong> (more than 2 pixels). The correct position is drawn as a blue line, and a progress bar shows how many images you have completed.</li>
+            <li>Select <strong>Next</strong> to continue to the following image.</li>
+            <li>After the last image, a summary compares your lines to the correct position and counts Exact, Good, and Out of range positions, and positions distal (above) or proximal (below) to the correct position.</li>
+            <li>Close the summary and choose another set to continue training.</li>
+          </ol>
+        </details>
+
+        <h3 id="doc-evaluation">Evaluation module</h3>
+        <details>
+          <summary>What is the Evaluation module?</summary>
+          <p>The Evaluation module assesses HR-pQCT operator performance and certifies operators.</p>
+        </details>
+        <details>
+          <summary>How do I use the Evaluation module for certification?</summary>
+          <p>After training on the For certification sets of radius and tibia images, move to evaluation. To be certified, you must pass at least 3 sets for the radius and 3 sets for the tibia. Radius sets are counted separately for the Scanco and proximal margin landmark definitions. To pass a set, all 8 positions must be Exact or Good; a single Out of range position fails the set. The count of passed sets is kept only for the current session, so keep the module open until you are certified. If you have difficulty, return to the Training module for more practice before starting a new evaluation session.</p>
+          <ol class="steps">
+            <li>Open the <a href="reflineEvaluation.html">Evaluation module</a>.</li>
+            <li>Choose <strong>Radius</strong> or <strong>Tibia</strong> (and, for the radius, the landmark definition), then select <strong>Start</strong>. A random evaluation set of 8 images is loaded.</li>
+            <li>Position and confirm the reference line on each image as in the Training module. Use the mouse: a set in which any line is placed with the keyboard does not count toward certification.</li>
+            <li>After the last image, a summary shows your Exact, Good, and Out of range counts, positions distal or proximal to the correct position, and the number of sets you have passed in this session.</li>
+            <li>When you have passed 3 sets for a bone, a certification message appears, with a printable certificate.</li>
+          </ol>
+        </details>
+
+        <h3 id="doc-repro">Reproducibility module</h3>
+        <details>
+          <summary>What is the Reproducibility module?</summary>
+          <p>The Reproducibility module measures HR-pQCT short-term intra-operator reproducibility.</p>
+        </details>
+        <details>
+          <summary>How do I use the Reproducibility module?</summary>
+          <p>The module uses 15 radius images and 16 tibia images. Each image is shown three times in random order, for a total of 45 radius or 48 tibia images. No feedback is given per image. After you complete the whole set, a table shows your three positions for each image and their standard deviation, and your reproducibility score (the root mean square of the standard deviations), with whether it falls within the range of experienced operators.</p>
+          <ol class="steps">
+            <li>Open the <a href="reflineRepro.html">Reproducibility module</a>.</li>
+            <li>Choose <strong>Radius</strong> or <strong>Tibia</strong>, then select <strong>Start</strong>.</li>
+            <li>Position and confirm the reference line on each image with the mouse, then select <strong>Next</strong>. If any line is placed with the keyboard, the score is not accepted.</li>
+            <li>At the end, review your results. You can print them or close the summary to start a new session.</li>
+          </ol>
+        </details>
+      </section>
+
+      <section id="contact" aria-labelledby="contact-h">
+        <h2 id="contact-h">Contact Us</h2>
+        <p>If you have any questions or comments, please email <a href="mailto:andrew.burghardt@ucsf.edu">andrew.burghardt@ucsf.edu</a>.</p>
+      </section>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <p>Department of Radiology and Biomedical Imaging, University of California San Francisco</p>
+      <p>© 2015–2026 The Regents of the University of California</p>
+      <ul>
+        <li><a href="https://www.ucsf.edu/accessibility-resources">Accessibility</a></li>
+        <li><a href="https://www.ucsf.edu/website-privacy-policy">Privacy Policy</a></li>
+        <li><a href="https://www.ucsf.edu/terms-of-use">Terms of Use</a></li>
+        <li><a href="mailto:andrew.burghardt@ucsf.edu?subject=Reference%20Line%20website%20accessibility">Report an accessibility issue</a></li>
+      </ul>
+    </div>
+  </footer>
+</body>
+</html>

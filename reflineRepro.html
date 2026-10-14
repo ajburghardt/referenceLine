@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Reproducibility – Reference Line Training &amp; Evaluation | UCSF</title>
+  <link rel="icon" href="img/icon-repro.png">
+  <link rel="stylesheet" href="refline.css">
+</head>
+<body class="module-body" data-mode="repro">
+  <a class="skip-link" href="#main">Skip to main content</a>
+
+  <nav id="ucsf-banner-nav" aria-label="University of California San Francisco">
+    <div class="inner">
+      <a href="https://www.ucsf.edu/">University of California San Francisco</a>
+      <ul>
+        <li><a href="https://radiology.ucsf.edu/">Radiology &amp; Biomedical Imaging</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <header class="module-header">
+    <a href="landingpage.html"><img src="img/logo-refline.png" width="260" height="51" alt="UCSF Reference Line Training &amp; Evaluation – home"></a>
+    <h1>Reproducibility</h1>
+    <nav aria-label="Modules">
+      <a href="landingpage.html#doc-repro">Help</a> ·
+      <a href="reflineTraining.html">Training</a> ·
+      <a href="reflineEvaluation.html">Evaluation</a>
+    </nav>
+  </header>
+
+  <main id="main" class="workspace">
+    <div class="controls">
+      <h2 class="visually-hidden">Controls</h2>
+      <p id="deviceNotice" class="alert alert-out device-notice" hidden>This module simulates the scanner workstation and requires a desktop or laptop computer with a mouse or trackpad. It cannot be used on phones or tablets.</p>
+      <fieldset id="setup">
+        <legend class="visually-hidden">Session setup</legend>
+        <fieldset class="radio-list">
+          <legend>Bone</legend>
+          <label><input type="radio" name="bone" value="radius"> Radius</label>
+          <label><input type="radio" name="bone" value="tibia"> Tibia</label>
+        </fieldset>
+      </fieldset>
+
+      <div class="button-row">
+        <button type="button" id="startBtn" class="btn" disabled>Start</button>
+      </div>
+
+      <div id="progressWrap" class="progress-wrap" hidden>
+        <p id="setLabel" class="hint"></p>
+        <label for="progress">Progress: <span id="progressText"></span></label>
+        <progress id="progress" max="8" value="0"></progress>
+      </div>
+
+      <div class="button-row" style="margin-top:1rem">
+        <button type="button" id="lineBtn" class="btn" disabled>Set reference line</button>
+        <button type="button" id="confirmBtn" class="btn" disabled>Confirm</button>
+        <button type="button" id="nextBtn" class="btn" disabled>Next</button>
+      </div>
+      <p id="lineHint" class="hint">After selecting <strong>Set reference line</strong>, move the mouse over the image and click to place the line. <span class="visually-hidden">Keyboard alternative: Up and Down arrow keys (Shift for steps of 10 pixels), then Enter. Lines placed with the keyboard are not accepted for the reproducibility score.</span></p>
+
+      <div id="result" class="status-box" role="status" aria-live="polite"></div>
+      <p id="keyboardNotice" class="alert alert-out" role="alert" hidden>Keyboard positioning detected. This module assesses mouse positioning, as on the scanner workstation, so this session’s reproducibility score will not be accepted. Select <strong>Set reference line</strong> again to reposition with the mouse.</p>
+    </div>
+
+    <div class="viewer">
+      <canvas id="scout" width="512" height="512" tabindex="-1" role="slider" aria-orientation="vertical"
+        aria-valuemin="20" aria-valuemax="512" aria-valuenow="180" aria-disabled="true" aria-label="Reference line position on the scout view image" aria-describedby="lineHint">
+        Your browser does not support the scout view display. Please use a current version of Chrome, Edge, Firefox, or Safari.
+      </canvas>
+      <div class="scanco-panel" aria-hidden="true">
+        <div class="scanco-scale"><span>7</span><span>5</span><span>3</span><span>1</span><span>0</span></div>
+        <div class="scanco-timer"><div></div></div>
+        <div class="scanco-preview"></div>
+        <div class="scanco-gradient"></div>
+      </div>
+    </div>
+  </main>
+
+  <dialog id="feedback" aria-labelledby="feedbackTitle">
+    <h2 id="feedbackTitle" tabindex="-1" autofocus>Reproducibility results</h2>
+    <table>
+      <caption>Reference line position (mm) for each image in the three repetitions</caption>
+      <thead><tr><th scope="col">Image</th><th scope="col">Set 1</th><th scope="col">Set 2</th><th scope="col">Set 3</th><th scope="col">Standard deviation</th></tr></thead>
+      <tbody id="resultRows"></tbody>
+    </table>
+    <p>Short-term intra-operator reproducibility (root mean square of standard deviations): <strong id="rmsScore"></strong></p>
+    <p>Accepted range: <span id="rmsRange"></span></p>
+    <p><strong id="inRange"></strong></p>
+    <p class="button-row no-print">
+      <button type="button" id="printFeedback" class="btn btn-secondary">Print</button>
+      <button type="button" id="closeFeedback" class="btn">Close</button>
+    </p>
+  </dialog>
+
+  <script src="radiusjSON.js"></script>
+  <script src="tibiajSON.js"></script>
+  <script src="refline.js"></script>
+</body>
+</html>

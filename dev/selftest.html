@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="utf-8"><title>Refline self-test (temporary)</title>
+<style>body{font:14px/1.4 system-ui,sans-serif;margin:1rem} iframe{position:fixed;left:-3000px;top:0;width:1280px;height:1000px;border:0} .ok{color:#1e5c2e} .fail{color:#a10a2c;font-weight:bold}</style>
+</head>
+<body>
+<h1>Refline self-test</h1>
+<p id="ua"></p>
+<ol id="log"></ol>
+<pre id="summary"></pre>
+<script>
+(async () => {
+  const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+  const results = [];
+  const waitFor = async (cond, what, ms = 8000) => { const t0 = Date.now(); while (!cond()) { if (Date.now() - t0 > ms) throw new Error('timeout waiting for ' + what); await sleep(25); } };
+  const log = (name, ok, detail) => {
+    results.push({ name, ok, detail: detail || '' });
+    const li = document.createElement('li');
+    li.className = ok ? 'ok' : 'fail';
+    li.textContent = (ok ? 'PASS ' : 'FAIL ') + name + (detail ? ' — ' + detail : '');
+    document.getElementById('log').appendChild(li);
+  };
+  const ua = navigator.userAgent;
+  document.getElementById('ua').textContent = ua;
+
+  async function load(page, width) {
+    const f = document.createElement('iframe');
+    if (width) f.style.width = width + 'px';
+    f.src = page + (page.includes('?') ? '&' : '?') + 't=' + Date.now();
+    document.body.appendChild(f);
+    await new Promise((r) => (f.onload = r));
+    await sleep(400);
+    return f;
+  }
+  async function step(name, fn) {
+    try { const d = await fn(); log(name, d === undefined || d === true || (typeof d === 'string'), typeof d === 'string' ? d : ''); }
+    catch (e) { log(name, false, e && e.message ? e.message : String(e)); }
+  }
+
+  // ---- Feature support ----
+  await step('feature: <dialog>.showModal', () => { if (!(typeof HTMLDialogElement === 'function' && 'showModal' in HTMLDialogElement.prototype)) throw new Error('missing'); });
+  await step('feature: Pointer Events', () => { if (!window.PointerEvent) throw new Error('missing'); });
+  await step('feature: CSS :focus-visible', () => { if (!CSS.supports('selector(:focus-visible)')) throw new Error('missing'); });
+  await step('feature: CSS custom properties / gap / clamp', () => { if (!(CSS.supports('--a: 1') && CSS.supports('gap: 1px') && CSS.supports('width: clamp(1px, 2px, 3px)'))) throw new Error('missing'); });
+  await step('feature: matchMedia any-pointer:fine (mouse present)', () => { if (!matchMedia('(any-pointer: fine)').matches) throw new Error('reports no fine pointer'); });
+
+  // ---- Landing page ----
+  await step('landing: renders, images load, details toggle, no horizontal scroll', async () => {
+    const f = await load('landingpage.html');
+    const d = f.contentDocument;
+    d.querySelectorAll('img').forEach((i) => { i.loading = 'eager'; });
+    d.querySelectorAll('details').forEach((x) => (x.open = true));
+    await sleep(1500);
+    const broken = [...d.querySelectorAll('img')].filter((i) => !i.complete || !i.naturalWidth).map((i) => i.getAttribute('src'));
+    if (broken.length) throw new Error('images not loaded: ' + broken.join(', '));
+    if (d.documentElement.scrollWidth > f.clientWidth + 1) throw new Error('horizontal overflow');
+    const det = d.querySelector('details'); det.open = false; if (det.open) throw new Error('details did not close');
+    const font = getComputedStyle(d.body).fontFamily;
+    f.remove();
+    return 'font: ' + font.slice(0, 40);
+  });
+
+  // Helpers for module pages
+  function api(f) {
+    const d = f.contentDocument, W = f.contentWindow, $ = (id) => d.getElementById(id), s = $('scout');
+    const mouse = (type, row) => { const r = s.getBoundingClientRect(); s.dispatchEvent(new W.PointerEvent(type, { clientX: r.left + 50, clientY: r.top + row + 0.3, bubbles: true, pointerType: 'mouse', button: 0 })); };
+    const key = (k, type) => s.dispatchEvent(new W.KeyboardEvent(type || 'keydown', { key: k, bubbles: true }));
+    const pick = (v) => d.querySelector('input[value="' + v + '"]').click();
+    const setLine = async () => { await waitFor(() => !$('lineBtn').disabled, 'Set reference line enabled'); $('lineBtn').click(); };
+    const confirm = async () => { await waitFor(() => !$('confirmBtn').disabled, 'Confirm enabled'); $('confirmBtn').click(); };
+    const next = async () => { await waitFor(() => !$('nextBtn').disabled, 'Next enabled'); $('nextBtn').click(); };
+    const start = async () => { await waitFor(() => !$('startBtn').disabled, 'Start enabled'); $('startBtn').click(); };
+    const closeSummary = async () => { $('closeFeedback').click(); await waitFor(() => !$('feedback').open && !$('startBtn').disabled, 'summary closed'); };
+    return { d, W, $, s, mouse, key, pick, setLine, confirm, next, start, closeSummary };
+  }
+  const col = (pixels, img) => [null].concat(pixels.map((r) => r[img]));
+
+  // ---- Training ----
+  await step('training: layout (scout 512x512, hidden options hidden)', async () => {
+    const f = await load('reflineTraining.html');
+    const { $, d } = api(f);
+    const r = $('scout').getBoundingClientRect();
+    const hiddenShown = [...d.querySelectorAll('label[hidden]')].filter((l) => l.offsetParent !== null).length;
+    f.remove();
+    if (Math.round(r.width) !== 512 || Math.round(r.height) !== 512) throw new Error('scout ' + r.width + 'x' + r.height);
+    if (hiddenShown) throw new Error(hiddenShown + ' hidden labels visible');
+  });
+
+  await step('training: mouse placement scores Exact/Good/Out, summary dialog, keyboard notice', async () => {
+    const f = await load('reflineTraining.html');
+    const { $, W, mouse, key, pick } = api(f);
+    const T = JSON.parse(W.tibiaText).tibiae, pT = JSON.parse(W.pixelInfoT);
+    const set = JSON.parse(W.set13TextTT).imageNums.slice(1).map(Number);   // Mixed → set 13 first
+    pick('tibia'); pick('mixed'); $('startBtn').click(); await sleep(600);
+    const offsets = [0, 1, -2, 3, 0, 0, 0, 0];
+    for (let i = 0; i < 8; i++) {
+      if (i) { $('nextBtn').click(); await sleep(250); }
+      $('lineBtn').click();
+      const row = col(pT, set[i]).indexOf(T[set[i]].grTruth) + offsets[i];
+      if (i === 5) { key('Home'); for (let k = 20; k < row; k++) key('ArrowDown'); key('Enter'); }
+      else { mouse('pointermove', row); mouse('pointerdown', row); }
+      if (i === 5 && $('keyboardNotice').hidden) throw new Error('training keyboard notice not shown');
+      $('confirmBtn').click();
+    }
+    $('nextBtn').click(); await sleep(400);
+    if (!$('feedback').open) throw new Error('summary dialog not open');
+    const counts = [$('countExact').textContent, $('countGood').textContent, $('countOut').textContent].join('/');
+    $('closeFeedback').click(); await sleep(200);
+    f.remove();
+    if (counts !== '5/2/1') throw new Error('counts ' + counts + ' (expected 5/2/1)');
+    return 'counts ' + counts;
+  });
+
+  await step('training: touch/pen ignored', async () => {
+    const f = await load('reflineTraining.html');
+    const { $, s, W, pick } = api(f);
+    pick('tibia'); pick('mixed'); $('startBtn').click(); await sleep(500);
+    $('lineBtn').click();
+    const r = s.getBoundingClientRect();
+    s.dispatchEvent(new W.PointerEvent('pointerdown', { clientX: r.left + 10, clientY: r.top + 300, bubbles: true, pointerType: 'touch', button: 0 }));
+    const placed = !$('confirmBtn').disabled;
+    f.remove();
+    if (placed) throw new Error('touch placed the line');
+  });
+
+  // ---- Evaluation ----
+  await step('evaluation: perfect mouse set passes; keyboard set does not count', async () => {
+    const f = await load('reflineEvaluation.html');
+    const { $, W, mouse, key, pick, setLine, confirm, next, start, closeSummary } = api(f);
+    W.Math.random = () => 0;   // force evaluation set 1
+    const T = JSON.parse(W.tibiaText).tibiae, pT = JSON.parse(W.pixelInfoT);
+    const set = JSON.parse(W.set1TextTE).imageNums.slice(1).map(Number);
+    pick('tibia');
+    const out = [];
+    for (const useKb of [false, true]) {
+      await start();
+      for (let i = 0; i < 8; i++) {
+        if (i) await next();
+        await setLine();
+        const row = col(pT, set[i]).indexOf(T[set[i]].grTruth);
+        if (useKb && i === 0) {
+          key('Home'); for (let k = 20; k < row; k++) key('ArrowDown'); key('Enter');
+          if ($('keyboardNotice').hidden) throw new Error('evaluation keyboard alert not shown');
+        } else { mouse('pointermove', row); mouse('pointerdown', row); }
+        await confirm();
+      }
+      await next();
+      await waitFor(() => $('feedback').open, 'summary dialog');
+      out.push($('setPassed').textContent.slice(0, 30));
+      await closeSummary();
+    }
+    f.remove();
+    if (!/passed/.test(out[0])) throw new Error('mouse set: ' + out[0]);
+    if (!/does not count/.test(out[1])) throw new Error('keyboard set: ' + out[1]);
+  });
+
+  // ---- Reproducibility ----
+  await step('repro: RMS matches independent calculation', async () => {
+    const f = await load('reflineRepro.html');
+    const { $, W, mouse, pick } = api(f);
+    const pR = JSON.parse(W.pixelInfoR), q = JSON.parse(W.setTextRR).imageNums.slice(1).map(Number);
+    pick('radius'); $('startBtn').click(); await sleep(600);
+    const rec = {};
+    for (let i = 0; i < q.length; i++) {
+      if (i) { $('nextBtn').click(); await sleep(120); }
+      $('lineBtn').click();
+      const row = 150 + (i % 4);
+      mouse('pointermove', row); mouse('pointerdown', row); $('confirmBtn').click();
+      (rec[q[i]] = rec[q[i]] || []).push(parseFloat(pR[row - 1][q[i]]));
+    }
+    $('nextBtn').click(); await sleep(400);
+    const ids = [...new Set(q)];
+    const sds = ids.map((id) => { const p = rec[id], m = (p[0] + p[1] + p[2]) / 3; return Math.sqrt(p.reduce((a, v) => a + (v - m) ** 2, 0) / 2); });
+    const expected = Math.sqrt(sds.reduce((a, v) => a + v * v, 0) / sds.length).toFixed(3) + ' mm';
+    const shown = $('rmsScore').textContent;
+    f.remove();
+    if (shown !== expected) throw new Error('shown ' + shown + ' expected ' + expected);
+    return shown;
+  });
+
+  // ---- Certificate ----
+  await step('certificate: message from query string', async () => {
+    const f = await load('certificate.html?bone=tibia');
+    const m = f.contentDocument.getElementById('message').textContent;
+    f.remove();
+    if (!/three tibia sets/.test(m)) throw new Error(m);
+  });
+
+  const failed = results.filter((r) => !r.ok);
+  const summary = (failed.length ? 'FAILED ' + failed.length : 'ALL PASSED') + ' (' + results.length + ' checks)';
+  document.getElementById('summary').textContent = summary;
+  document.title = summary;
+  const compact = results.map((r) => (r.ok ? 'P' : 'F') + ':' + r.name + (r.ok ? '' : '[' + r.detail + ']')).join('|');
+  fetch('/__selftest_result?ua=' + encodeURIComponent(ua) + '&summary=' + encodeURIComponent(summary) + '&r=' + encodeURIComponent(compact)).catch(() => {});
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,3 @@
+.DS_Store
+# temporary copies of dev/ test tools (see dev/README.md)
+_*.html

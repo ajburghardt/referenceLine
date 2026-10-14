@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><title>print harness (dev only)</title></head>
+<body>
+<script>
+// Runs a full session in a module, triggers the print preparation (same path as
+// File > Print), then replaces this page with the print-ready markup so a
+// headless browser can print it: ?m=training|evaluation|repro [&a4=1]
+(async () => {
+  const q = new URLSearchParams(location.search), mode = q.get('m');
+  const page = { training: 'reflineTraining.html', evaluation: 'reflineEvaluation.html', repro: 'reflineRepro.html' }[mode];
+  const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+  const f = document.createElement('iframe');
+  f.style.cssText = 'width:1280px;height:1000px';
+  f.src = page;
+  document.body.appendChild(f);
+  await new Promise((r) => (f.onload = r));
+  const d = f.contentDocument, W = f.contentWindow, $ = (id) => d.getElementById(id), s = $('scout');
+  const waitFor = async (c) => { for (let i = 0; i < 400 && !c(); i++) await sleep(25); };
+  const mouse = (type, row) => { const r = s.getBoundingClientRect(); s.dispatchEvent(new W.PointerEvent(type, { clientX: r.left + 50, clientY: r.top + row + 0.3, bubbles: true, pointerType: 'mouse', button: 0 })); };
+  d.querySelector('input[value=tibia]').click();
+  if (mode === 'training') d.querySelector('input[value=mixed]').click();
+  $('startBtn').click();
+  const n = mode === 'repro' ? 48 : 8;
+  for (let i = 0; i < n; i++) {
+    if (i) { await waitFor(() => !$('nextBtn').disabled); $('nextBtn').click(); }
+    await waitFor(() => !$('lineBtn').disabled); $('lineBtn').click();
+    const row = 150 + (i % 4) * 3; mouse('pointermove', row); mouse('pointerdown', row);
+    $('confirmBtn').click();
+  }
+  await waitFor(() => !$('nextBtn').disabled); $('nextBtn').click();
+  await waitFor(() => $('feedback').open);
+  await sleep(800);
+  if (mode === 'evaluation') $('certified').hidden = false;   // worst case: certification message shown
+  W.dispatchEvent(new Event('beforeprint'));
+  let html = d.documentElement.outerHTML.replace(/<script[\s\S]*?<\/script>/g, '');
+  if (q.get('a4')) html = html.replace('</head>', '<style>@page { size: A4; }</style></head>');
+  document.open(); document.write('<!DOCTYPE html>' + html); document.close();
+})();
+</script>
+</body></html>

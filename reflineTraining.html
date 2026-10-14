@@ -1,260 +1,123 @@
-<!-- DOCTYPE HTML -->
-<html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Training – Reference Line Training &amp; Evaluation | UCSF</title>
+  <link rel="icon" href="img/icon-training.png">
+  <link rel="stylesheet" href="refline.css">
+</head>
+<body class="module-body" data-mode="training">
+  <a class="skip-link" href="#main">Skip to main content</a>
 
-	<head>
-		<title>Reference Line Training and Evaluation</title>
+  <nav id="ucsf-banner-nav" aria-label="University of California San Francisco">
+    <div class="inner">
+      <a href="https://www.ucsf.edu/">University of California San Francisco</a>
+      <ul>
+        <li><a href="https://radiology.ucsf.edu/">Radiology &amp; Biomedical Imaging</a></li>
+      </ul>
+    </div>
+  </nav>
 
-		<meta name="viewport" content="width=device-width, initial-scale=1">
-		  <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
-		  <link rel="stylesheet" href="animate.css">
-		  <link rel="stylesheet" href="referencete.css">
-		  <link rel="stylesheet" href="coverpage.css">
-		  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-		  <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
-		
-		<script type="text/javascript"
-			src="http://code.jquery.com/jquery-latest.js">
-		</script>
-		
-	</head>
+  <header class="module-header">
+    <a href="landingpage.html"><img src="img/logo-refline.png" width="260" height="51" alt="UCSF Reference Line Training &amp; Evaluation – home"></a>
+    <h1>Training</h1>
+    <nav aria-label="Modules">
+      <a href="landingpage.html#doc-training">Help</a> ·
+      <a href="reflineEvaluation.html">Evaluation</a> ·
+      <a href="reflineRepro.html">Reproducibility</a>
+    </nav>
+  </header>
 
-	<body>
+  <main id="main" class="workspace">
+    <div class="controls">
+      <h2 class="visually-hidden">Controls</h2>
+      <p id="deviceNotice" class="alert alert-out device-notice" hidden>This module simulates the scanner workstation and requires a desktop or laptop computer with a mouse or trackpad. It cannot be used on phones or tablets.</p>
+      <fieldset id="setup">
+        <legend class="visually-hidden">Session setup</legend>
+        <fieldset class="radio-list">
+          <legend>Bone</legend>
+          <label><input type="radio" name="bone" value="radius"> Radius</label>
+          <label><input type="radio" name="bone" value="tibia"> Tibia</label>
+        </fieldset>
+        <fieldset id="landmarkSet" class="radio-list" hidden>
+          <legend>Radius landmark</legend>
+          <label><input type="radio" name="landmark" value="scanco"> Scanco landmark</label>
+          <label><input type="radio" name="landmark" value="proximal"> Proximal margin landmark</label>
+        </fieldset>
+        <fieldset class="radio-list">
+          <legend>Image set</legend>
+          <label><input type="radio" name="category" value="left-visible"> Left, landmark visible</label>
+          <label><input type="radio" name="category" value="right-visible"> Right, landmark visible</label>
+          <label><input type="radio" name="category" value="left-hidden"> Left, landmark not visible</label>
+          <label><input type="radio" name="category" value="right-hidden"> Right, landmark not visible</label>
+          <label hidden><input type="radio" name="category" value="left"> Left</label>
+          <label hidden><input type="radio" name="category" value="right"> Right</label>
+          <label><input type="radio" name="category" value="mixed"> Mixed</label>
+          <label><input type="radio" name="category" value="random"> Random</label>
+          <label><input type="radio" name="category" value="certification"> For certification (all 15 sets, 120 images, about 1 hour)</label>
+        </fieldset>
+      </fieldset>
 
-		    <!--<div id="ucsf-banner-nav" class="no-logo">
-		      <div class="top-header-container row">
-		          <ul class="menu">
-		            <li class="first"><a href="http://www.ucsf.edu">University of California San Francisco</a></li>
-		            <li><a href="http://www.ucsfhealth.org/">UCSF Medical Center</a></li>
-		            <li><a href="http://www.ucsf.edu/search" title="">Search UCSF</a></li>
-		            <li><a href="http://www.ucsf.edu/about">About UCSF</a></li>
-		          </ul>
-		      </div>
-    		</div>-->
+      <div class="button-row">
+        <button type="button" id="startBtn" class="btn" disabled>Start</button>
+      </div>
 
-	<div id="interface" class ="unselectable">
+      <div id="progressWrap" class="progress-wrap" hidden>
+        <p id="setLabel" class="hint"></p>
+        <label for="progress">Progress: <span id="progressText"></span></label>
+        <progress id="progress" max="8" value="0"></progress>
+      </div>
 
-		<canvas id="scoutScan" width="512" height="512">
-			Your browser does not support the HTML5 canvas tag.</canvas>
-		<div id = "belowcontainer">
-			<div id="sideNums">
-				<p class="boldMargin">7</p>
-				<p class ="boldMargin">5</p>
-				<p class ="boldMargin">3</p>
-				<p class ="boldMargin">1</p>
-				<p class="bold">0</p>
-			</div>
-			<div id="split">
-				<div id="timer"></div>
-			</div>
-			<div id="preview"></div>
-			<canvas id="gradient" width="21" height="383"></canvas>
-		</div>
+      <div class="button-row" style="margin-top:1rem">
+        <button type="button" id="lineBtn" class="btn" disabled>Set reference line</button>
+        <button type="button" id="confirmBtn" class="btn" disabled>Confirm</button>
+        <button type="button" id="nextBtn" class="btn" disabled>Next</button>
+      </div>
+      <p id="lineHint" class="hint">After selecting <strong>Set reference line</strong>, move the mouse over the image and click to place the line. Keyboard alternative: Up and Down arrow keys (Shift for steps of 10 pixels), then Enter. (Evaluation and Reproducibility require the mouse.)</p>
 
-		<div id = "hello" style="top: 0px; right: 760px;" width = "200" height = "600">
+      <div id="result" class="status-box" role="status" aria-live="polite"></div>
+      <p id="keyboardNotice" class="alert alert-good" role="alert" hidden>Keyboard positioning is fine for practice here, but the <strong>Evaluation</strong> and <strong>Reproducibility</strong> modules assess mouse positioning, as on the scanner workstation. Lines placed with the keyboard there do not count. Practice with the mouse to prepare for certification.</p>
+    </div>
 
-			<img src="img/reflineheader.png" id = "resizeHeader"/>
+    <div class="viewer">
+      <canvas id="scout" width="512" height="512" tabindex="-1" role="slider" aria-orientation="vertical"
+        aria-valuemin="20" aria-valuemax="512" aria-valuenow="180" aria-disabled="true" aria-label="Reference line position on the scout view image" aria-describedby="lineHint">
+        Your browser does not support the scout view display. Please use a current version of Chrome, Edge, Firefox, or Safari.
+      </canvas>
+      <div class="scanco-panel" aria-hidden="true">
+        <div class="scanco-scale"><span>7</span><span>5</span><span>3</span><span>1</span><span>0</span></div>
+        <div class="scanco-timer"><div></div></div>
+        <div class="scanco-preview"></div>
+        <div class="scanco-gradient"></div>
+      </div>
+    </div>
+  </main>
 
-			<p id="demo2" style="display:none;"></p>
-			<p id="demo3" style="display:none;"></p>
+  <dialog id="feedback" aria-labelledby="feedbackTitle">
+    <h2 id="feedbackTitle" tabindex="-1" autofocus>Set results</h2>
+    <canvas id="feedbackCanvas" width="512" height="512" role="img"
+      aria-label="Your reference lines for this set drawn on a sample scout view image, colored by result; the correct position is the blue line. The same results are listed in the table below."></canvas>
+    <ul class="counts">
+      <li><span class="legend-swatch" style="background:#66ff00"></span>Exact: <strong id="countExact"></strong></li>
+      <li><span class="legend-swatch" style="background:#ffa500"></span>Good: <strong id="countGood"></strong></li>
+      <li><span class="legend-swatch" style="background:#ff0000"></span>Out of range: <strong id="countOut"></strong></li>
+      <li><span class="legend-swatch" style="background:#0033ff"></span>Correct position</li>
+    </ul>
+    <p id="aboveBelow"></p>
+    <table>
+      <caption>Result for each image</caption>
+      <thead><tr><th scope="col">Image</th><th scope="col">Result</th><th scope="col">Offset (pixels)</th><th scope="col">Direction</th></tr></thead>
+      <tbody id="resultRows"></tbody>
+    </table>
+    <p class="button-row no-print" style="margin-top:1rem">
+      <button type="button" id="printFeedback" class="btn btn-secondary">Print</button>
+      <button type="button" id="closeFeedback" class="btn">Close</button>
+    </p>
+  </dialog>
 
-			<p id ="mode"></p>
-
-			<!-- RADIUS TIBIA BUTTONS -->
-			  <button id = "rButton" type="button" class="btn btn-info small-btn" onclick ="chooseBones(1)">Radius</button>
-			  <button id = "tButton" type="button" class="btn btn-info small-btn" onclick ="chooseBones(0)">Tibia</button>
-			<!--<p>
-				Random Sets: <input type="checkbox" id="checkRandom" onchange = 'updateSetDropDown()'/>
-			</p> -->
-			<div id="holdLL">
-				<div id="laterality" class="radio">
-					Laterality
-				  <br><label><input type="radio" name="lat" id="left" onchange = 'isLeft(1)'>Left</label></br>
-				  <label><input type="radio" name="lat" id="right" onchange = 'isLeft(0)'>Right</label>
-				</div>
-				<div id="landmark" class="radio">
-					Landmark
-				  <br><label><input type="radio" name="land" id="visible" onchange = 'isLand(1)'>Visible</label></br>
-				  <label><input type="radio" name="land" id="notvisible" onchange = 'isLand(0)'>Not Visible</label>
-				</div>
-				<div id="moreStuff" class="radio">
-					More
-				  <br><label><input type="radio" name="mixedr" id="mixed" onchange = 'isMixed(1)'>Mixed</label></br>
-				  <label><input type="radio" name="mixedr" id="randomImgs" onchange = "isMixed(0)">Random</label>
-				</div>
-			</div>
-
-				<div id="dropSetSelect" style="display:none;">                                      
-				  <div class="dropdown">
-				    <button id = "dropSetButton" class="btn btn-info dropdown-toggle large-btn" type="button" id="menu1" data-toggle="dropdown">Select a Set
-				    <span class="caret"></span></button>
-				    <ul class="dropdown-menu" role="menu" aria-labelledby="menu1">
-				      <li class="dropdown-header">Left Landmark Visible</li>
-				      <li role="presentation"><a role="menuitem" tabindex="-1" href="#" onclick = "drawImgSelected(1)">1</a></li>
-				      <li role="presentation"><a role="menuitem" tabindex="-1" href="#" onclick = "drawImgSelected(2)">2</a></li>
-				      <li role="presentation"><a role="menuitem" tabindex="-1" href="#" onclick = "drawImgSelected(3)">3</a></li>
-				      <li class="dropdown-header">Right Landmark Visible</li>
-				      <li role="presentation"><a role="menuitem" tabindex="-1" href="#" onclick = "drawImgSelected(4)">4</a></li>
-				      <li role="presentation"><a role="menuitem" tabindex="-1" href="#" onclick = "drawImgSelected(5)">5</a></li>
-				      <li role="presentation"><a role="menuitem" tabindex="-1" href="#" onclick = "drawImgSelected(6)">6</a></li>
-				      <li class="dropdown-header">Left Landmark Not Visible</li>
-				      <li role="presentation"><a role="menuitem" tabindex="-1" href="#" onclick = "drawImgSelected(7)">7</a></li>
-				      <li role="presentation"><a role="menuitem" tabindex="-1" href="#" onclick = "drawImgSelected(8)">8</a></li>
-				      <li role="presentation"><a role="menuitem" tabindex="-1" href="#" onclick = "drawImgSelected(9)">9</a></li>
-				      <li class="dropdown-header">Right Landmark Not Visible</li>
-				      <li role="presentation"><a role="menuitem" tabindex="-1" href="#" onclick = "drawImgSelected(10)">10</a></li>
-				      <li role="presentation"><a role="menuitem" tabindex="-1" href="#" onclick = "drawImgSelected(11)">11</a></li>
-				      <li role="presentation"><a role="menuitem" tabindex="-1" href="#" onclick = "drawImgSelected(12)">12</a></li>
-				      <li class="dropdown-header">All Cases</li>
-				      <li role="presentation"><a role="menuitem" tabindex="-1" href="#" onclick = "drawImgSelected(13)">13</a></li>
-				      <li role="presentation"><a role="menuitem" tabindex="-1" href="#" onclick = "drawImgSelected(14)">14</a></li>
-				      <li role="presentation"><a role="menuitem" tabindex="-1" href="#" onclick = "drawImgSelected(15)">15</a></li>
-				      <li role="presentation" class="divider"></li>
-				      <li role="presentation"><a role="menuitem" tabindex="-1" href="#" onclick = "drawImgSelected('random')" >Random</a></li>
-				    </ul>
-				  </div>
-				</div>
-
-
-			<form style="display:none;">
-				<p id = "setSelector"> Select a Set:
-					<select id="dropSet" onchange='drawImg()'>
-					  <option value="dummy" selected="selected"> </option>
-					  <option value="1">1</option>
-					  <option value="2">2</option>
-					  <option value="3">3</option>
-					  <option value="4">4</option>
-					  <option value="5">5</option>
-					  <option value="6">6</option>
-					  <option value="7">7</option>
-					  <option value="8">8</option>
-					  <option value="9">9</option>
-					  <option value="10">10</option>
-					  <option value="11">11</option>
-					  <option value="12">12</option>
-					  <option value="13">13</option>
-					  <option value="14">14</option>
-					  <option value="15">15</option>
-					  <option value="random">Random</option>
-					</select>
-				</p>
-			</form>
-
-			<input type = "button"
-					id = "getLine"
-					class="btn btn-info large-btn"
-					value="Set Reference Line"
-					onclick="startLine()"
-					width="20px">
-			</input>
-
-			<input type = "button"
-					id = "confirmLine"
-					class="btn btn-info small-btn"
-					value="Confirm"
-					 onclick="checkPos()">
-			</input>
-
-			<input type = "button"
-					id = "nextImg"
-					class="btn btn-info small-btn invisible"
-					value="Next"
-					onclick="nextImage()">
-			</input>
-
-			<!--<img src ="RadiusTibiaImages/C0006657_radius.jpg" /> -->
-			<p id = "demo"></p>
-			<p id = "hi"></p>
-			<!-- <p id = 'here'>Hello World!</p> -->
-
-			<div class="progresso invisible">
-			    <div class="progress progress-striped active">
-			        <div id = "bar" class="progress-bar progress-bar-info" style="min-width: 2em; width:0%;">0/8</div>
-			    </div>
-			</div>
-
-			<canvas id="trafficLight" width="340" height="120" style="display:none;"></canvas>
-			<div id = "trafficAlerts" style="margin: 10px 0px 10px 0px;">
-				<div id = "goodLine" class="alert alert-success" role="alert" style="display:none;">
-					<strong>Good!</strong> </div>
-				<div id = "okLine" class="alert alert-info" role="alert" style="display:none;"><strong>Ok! </strong></div>
-				<div id = "badLine" class="alert alert-danger" role="alert" style="display:none;">
-					<strong>Out of Range! </strong></div>
-			</div>
-
-
-
-			<p id = "traffic" style="display:none;"></p>
-
-		</div>
-
-	</div>
-
-	<div id="preWindow"> <!--this is the lightbox that appears
-            in front :) -->
-            <h1 class="animated fadeInDown">Example</h1>
-            	<h2>
-                	Select An Option
-                </h2>
-				<p align="center">
-								<form id="chooseTE">
-								  	<input type="radio" name="mode" id="training" value = "1" />Training
-								  	<input type="radio" name="mode" id="evaluation" value = "0"/>Evaluation
-								</form>
-								<form id="not usable as of now">
-									<br>Not in Use currently</br>
-								  	<input type="radio" name="mode" id="pediatric" value = "1" />Pediatric
-								  	<input type="radio" name="mode" id="notPediatric" value = "0"/>Not Pediatric
-								</form>
-					<a id="close-preWindow" href="#">Proceed to Reference Line</a>
-					<!-- makes link panel and specifies it as target to go
-				into function -->
-				</p>
-            </div><!-- /panel -->
-
-            <!-- <div id="lightbox2"></div> /lightbox, the gray background that
-            comes with the box-->
-
-
-	<!--<div id="lightbox-panel"> this is the lightbox that appears
-            in front :) -->
-
-            <div class="panel panel-info" id="lightbox-panel">
-				  	<div class="panel-heading">
-				    <h3 class="panel-title">Feedback</h3>
-				  </div>
-				  <div class="panel-body">
-				
-                <div id="feedbackHolder">
-                	<canvas id="lbCanvas" width="512" height="512">
-					Your browser does not support the HTML5 canvas tag.</canvas>
-				</div>
-
-				<div id = "okWrapper">
-					<div class="exact" id="feedBackText1">HELLO</div>
-					<div class="ok" id="feedBackText2">HELLO</div>
-					<div class="outOfRange" id="feedBackText3">HELLO</div>
-				</div>
-
-				<div id = "belowText">
-
-					<p id="aboveBelow"></p>
-
-					<p align="center">
-						<a id="close-panel" class="btn btn-info" href="#">Close this window</a>
-						<!-- makes link panel and specifies it as target to go
-					into function -->
-					</p>
-				</div>
-				  </div>
-    </div><!-- /panel -->
-
-    <div id="lightbox" style="display:none;"></div> <!-- the grey background -->
-
-    <script src="radiusjSON.js"></script>
-
-	<script src="tibiajSON.js"></script>
-
-	<script type="text/javascript" src="MoveLineTraining.js"></script>
-	
-	</body>
+  <script src="radiusjSON.js"></script>
+  <script src="tibiajSON.js"></script>
+  <script src="refline.js"></script>
+</body>
 </html>
